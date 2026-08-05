@@ -15,6 +15,7 @@ window.PROFILE = {
     counters: true,       // números animados da prova social
     liveStatus: true,     // selo de ao vivo no topo
     grain: true,          // textura de grão no fundo
+    particles: true,      // partículas em movimento no fundo
   },
 
   languages: ["pt", "en"],

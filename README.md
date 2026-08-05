@@ -39,6 +39,7 @@ Outras características:
 ├── assets/
 │   ├── css/style.css       Estilo. As cores vêm de variáveis CSS injetadas.
 │   ├── js/main.js          Lê as configs e monta a página. Não tem conteúdo.
+│   ├── js/background.js    Partículas do fundo. Independente do resto.
 │   ├── icons/              PNGs das redes sociais (ver icons/README.md)
 │   └── img/avatar.jpg      Foto de perfil
 └── README.md
@@ -108,8 +109,21 @@ features: {
   counters: true,       // números animados
   liveStatus: true,     // selo de ao vivo
   grain: true,          // textura de fundo
+  particles: true,      // partículas em movimento no fundo
 }
 ```
+
+### O fundo
+
+São quatro camadas fixas, todas transparentes ao clique: a malha quadriculada
+(`html::before`, com máscara radial para não ficar marcada nas bordas), as
+partículas em canvas (`assets/js/background.js`), o grão e o brilho do tema.
+A densidade das partículas acompanha a área da tela, então o celular desenha
+menos que o desktop, e a animação para quando a aba sai de foco.
+
+Quem tem "reduzir movimento" ligado no sistema recebe as partículas paradas e os
+contadores já no valor final — vale saber disso ao testar, porque a página vai
+parecer estática sem estar quebrada.
 
 ### Ícones
 

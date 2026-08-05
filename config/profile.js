@@ -46,6 +46,8 @@ window.PROFILE = {
     en: "Twitch, YouTube, TikTok and Instagram data · updated Aug 2026",
   },
 
+  counterDuration: 6000,
+
   stats: [
     { value: 300000000, fmt: "compact", suffix: "+", label: { pt: "Visualizações", en: "Views" } },
     { value: 300000,    fmt: "compact", suffix: "+", label: { pt: "Seguidores na Twitch", en: "Twitch followers" } },

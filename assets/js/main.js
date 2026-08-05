@@ -237,7 +237,7 @@
       paintValue(node, target);
       return;
     }
-    const duration = 2200;
+    const duration = P.counterDuration || 6000;
     const start = performance.now();
     function step(now) {
       const p = Math.min((now - start) / duration, 1);

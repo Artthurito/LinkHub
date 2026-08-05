@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://thimagroo.vercel.app/sitemap.xml

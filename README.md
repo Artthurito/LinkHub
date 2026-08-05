@@ -41,7 +41,9 @@ Outras características:
 │   ├── js/main.js          Lê as configs e monta a página. Não tem conteúdo.
 │   ├── js/background.js    Partículas do fundo. Independente do resto.
 │   ├── icons/              PNGs das redes sociais (ver icons/README.md)
-│   └── img/avatar.jpg      Foto de perfil
+│   └── img/                avatar.jpg (perfil) e og.png (preview de link)
+├── robots.txt
+├── sitemap.xml
 └── README.md
 ```
 
@@ -132,6 +134,39 @@ exportados em branco a 128 px. Se um arquivo faltar, o card cai para um
 monograma ("TW", "YT") e a página não quebra. Ver `assets/icons/README.md` para
 a especificação e como adicionar uma rede nova.
 
+## SEO
+
+O que está montado:
+
+- Título, descrição, `canonical`, `robots` e o par Open Graph / Twitter Card
+  completos em `index.html`. Ficam estáticos de propósito: WhatsApp, Discord,
+  Telegram e Instagram leem o HTML cru e **não executam JavaScript**, então
+  metatag gerada por JS não apareceria no preview deles.
+- `assets/img/og.png` (1200×630) com foto, nome e os dois números principais.
+- Dados estruturados JSON-LD (`ProfilePage` + `Person`) gerados em `main.js` a
+  partir do `profile.js`. O `sameAs` sai da lista de links, então ligar ou
+  desligar uma rede atualiza o schema junto — é o que diz ao Google que os
+  perfis são da mesma pessoa.
+- `robots.txt` e `sitemap.xml`.
+- `h1` e descrição escritos no HTML e só depois reescritos pelo JS no idioma
+  certo, para que a página tenha conteúdo mesmo sem JavaScript.
+- Hierarquia de títulos correta: `h1` do nome, `h2` por seção, `h3` nos grupos.
+
+Não há `hreflang`: PT e EN vivem na mesma URL, e `hreflang` exige uma URL
+distinta por idioma. O par correto nesse caso é `og:locale` + `og:locale:alternate`,
+que é o que está aplicado.
+
+### Ao trocar de domínio
+
+A URL aparece em dois arquivos:
+
+1. `index.html` — o `<link rel="canonical">`, o `og:url` e as duas referências
+   de imagem (`og:image`, `twitter:image`)
+2. `sitemap.xml` e `robots.txt`
+
+O JSON-LD não precisa de ajuste: ele lê a URL do `canonical` em tempo de
+execução.
+
 ## Status "ao vivo" real
 
 Hoje `live.isLive` é manual em `config/profile.js`. Para automatizar é preciso
@@ -149,24 +184,25 @@ Enquanto isso não existe, o site funciona normalmente com o valor manual.
 
 ## Publicação
 
-Cloudflare Pages, plano gratuito: banda ilimitada, SSL e proteção contra DDoS
-inclusos. Como o projeto é estático, não há etapa de build.
+Hospedagem atual: **Vercel**. Como o projeto é estático, não há etapa de build.
 
-1. Conecte o repositório em Cloudflare Pages
-2. Build command: *(vazio)*
-3. Output directory: `/`
-4. Aponte o domínio em Custom domains
+1. Importe o repositório na Vercel
+2. Framework Preset: *Other*
+3. Build command e Output directory: *(vazios)*
+4. O domínio `.com` entra depois em Settings → Domains
 
-O plano Hobby da Vercel é uma alternativa técnica, mas veda uso comercial — se a
-página for de um cliente pagante, ou se usa o Pages ou se assina o Vercel Pro.
+Atenção ao plano: o **Hobby da Vercel veda uso comercial**. Enquanto a página é
+portfólio pessoal, tudo certo. Se virar entrega para um criador que paga pelo
+trabalho, é preciso assinar o Pro ou migrar para o Cloudflare Pages, cujo plano
+gratuito permite uso comercial e ainda dá banda ilimitada.
 
 ## Pendências
 
 - [x] Adicionar os PNGs oficiais em `assets/icons/`
+- [x] Gerar `assets/img/og.png` (1200×630) para o preview em links
 - [ ] Confirmar os números marcados com `TODO` em `config/profile.js`
-- [ ] Gerar `assets/img/og.png` (1200×630) para o preview em links
-- [ ] Preencher os dados reais de audiência do modo marca
-- [ ] Decidir o domínio e registrá-lo no CPF/CNPJ do criador
+- [ ] Registrar o domínio `.com` e atualizar a URL nos dois arquivos (ver SEO)
+- [ ] Cadastrar o site no Google Search Console após publicar
 
 ## Licença
 

@@ -140,7 +140,7 @@
       if (!visible.length) return;
 
       const wrap = el("div", "group");
-      const title = el("h2", "group-title");
+      const title = el("h3", "group-title");
       title.textContent = t(group.title);
       wrap.appendChild(title);
 
@@ -359,6 +359,53 @@
     $("footerText").textContent = "© " + year + " " + P.legalName + " " + ui("footer.rights");
   }
 
+  function buildStructuredData() {
+    const canonical = document.querySelector('link[rel="canonical"]');
+    const base = canonical ? canonical.href : window.location.href;
+    const abs = (p) => new URL(p, base).href;
+
+    const sameAs = (P.groups || [])
+      .filter((g) => g.enabled !== false)
+      .reduce((acc, g) => acc.concat(g.links || []), [])
+      .filter((l) => l.enabled !== false && /^https?:\/\//.test(l.url || ""))
+      .map((l) => l.url);
+
+    if (P.contact && P.contact.telegram && P.contact.telegram.enabled && P.contact.telegram.url) {
+      sameAs.push(P.contact.telegram.url);
+    }
+
+    const person = {
+      "@type": "Person",
+      name: P.legalName || P.displayName,
+      alternateName: P.displayName,
+      url: base,
+      image: abs(P.avatar),
+      description: t(P.tagline),
+      sameAs: Array.from(new Set(sameAs)),
+    };
+
+    if (P.contact && P.contact.email && P.contact.email.enabled && P.contact.email.address) {
+      person.email = P.contact.email.address;
+    }
+
+    const data = {
+      "@context": "https://schema.org",
+      "@type": "ProfilePage",
+      url: base,
+      inLanguage: locale(),
+      mainEntity: person,
+    };
+
+    let node = $("ldjson");
+    if (!node) {
+      node = document.createElement("script");
+      node.type = "application/ld+json";
+      node.id = "ldjson";
+      document.head.appendChild(node);
+    }
+    node.textContent = JSON.stringify(data).replace(/</g, "\\u003c");
+  }
+
   /* animações */
   const io = new IntersectionObserver(
     (entries) => {
@@ -419,6 +466,7 @@
     buildOffer();
     buildContact();
     buildFooter();
+    buildStructuredData();
     syncLangState();
     observeAll();
   }

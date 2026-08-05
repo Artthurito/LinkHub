@@ -1,0 +1,15 @@
+window.PLATFORMS = {
+  twitch:    { icon: "assets/icons/twitch.png",    fallback: "TW", label: "Twitch",    brand: "#9146FF" },
+  kick:      { icon: "assets/icons/kick.png",      fallback: "KI", label: "Kick",      brand: "#53FC18" },
+  youtube:   { icon: "assets/icons/youtube.png",   fallback: "YT", label: "YouTube",   brand: "#FF0033" },
+  instagram: { icon: "assets/icons/instagram.png", fallback: "IG", label: "Instagram", brand: "#E1306C" },
+  tiktok:    { icon: "assets/icons/tiktok.png",    fallback: "TT", label: "TikTok",    brand: "#25F4EE" },
+  x:         { icon: "assets/icons/x.png",         fallback: "X",  label: "X",         brand: "#FFFFFF" },
+  discord:   { icon: "assets/icons/discord.png",   fallback: "DC", label: "Discord",   brand: "#5865F2" },
+  telegram:  { icon: "assets/icons/telegram.png",  fallback: "TG", label: "Telegram",  brand: "#2AABEE" },
+  whatsapp:  { icon: "assets/icons/whatsapp.png",  fallback: "WA", label: "WhatsApp",  brand: "#25D366" },
+  spotify:   { icon: "assets/icons/spotify.png",   fallback: "SP", label: "Spotify",   brand: "#1DB954" },
+  email:     { icon: "assets/icons/email.png",     fallback: "@",  label: "E-mail",    brand: "#EFE9E1" },
+  store:     { icon: "assets/icons/store.png",     fallback: "SH", label: "Loja",      brand: "#EFE9E1" },
+  link:      { icon: "assets/icons/link.png",      fallback: "→",  label: "Link",      brand: "#EFE9E1" },
+};

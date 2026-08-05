@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-mode="fan">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<title>Thimagroo — links</title>
+<meta name="description" content="Todos os links do Thimagroo: Twitch, YouTube, Instagram, TikTok, Discord e contato comercial.">
+<meta name="theme-color" content="#0E0C0B">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Thimagroo — links">
+<meta property="og:description" content="Lives de IRL na Twitch, vídeos no YouTube, TikTok e Instagram.">
+<meta property="og:image" content="assets/img/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/img/avatar.jpg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62.5..125,400..900&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <div class="brandmark" id="brandmark"></div>
+    <div class="seg seg--mode" id="modeSwitch" role="group" hidden></div>
+    <div class="seg seg--lang" id="langSwitch" role="group" hidden></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <section class="hero">
+    <div class="hero-id">
+      <div class="avatar-row">
+        <div class="avatar"><img id="avatar" alt="" width="76" height="76"></div>
+        <div class="status" id="status" hidden>
+          <span class="dot"></span><span id="statusText"></span>
+        </div>
+      </div>
+      <h1 id="displayName"></h1>
+      <p class="tagline" id="tagline"></p>
+      <div class="cta-row" id="ctaRow"></div>
+    </div>
+
+    <aside class="proof" id="proof" hidden>
+      <div class="proof-head">
+        <span class="eyebrow" data-ui="proof.title"></span>
+        <span class="eyebrow" id="statsPeriod"></span>
+      </div>
+      <div class="proof-grid" id="statsGrid"></div>
+      <p class="proof-foot" id="statsSource"></p>
+    </aside>
+  </section>
+</div>
+
+<main>
+  <section class="section wrap mode-fade" id="links">
+    <div class="section-head"><span class="eyebrow" data-ui="links.title"></span></div>
+    <div id="linkGroups"></div>
+  </section>
+
+  <section class="section wrap mode-fade brand-only" id="audience" hidden>
+    <div class="section-head"><span class="eyebrow" data-ui="aud.title"></span></div>
+    <div class="panel-grid panel-grid--2">
+      <div class="panel">
+        <span class="eyebrow" data-ui="aud.age"></span>
+        <div class="bars" id="barsAge"></div>
+        <span class="eyebrow eyebrow--spaced" data-ui="aud.region"></span>
+        <div class="bars" id="barsRegion"></div>
+      </div>
+      <div class="panel">
+        <span class="eyebrow" data-ui="aud.platforms"></span>
+        <div class="kv-list" id="kvPlatforms"></div>
+        <span class="eyebrow eyebrow--spaced" data-ui="aud.engage"></span>
+        <div class="kv-list" id="kvEngagement"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section wrap mode-fade brand-only" id="offer" hidden>
+    <div class="section-head"><span class="eyebrow" data-ui="offer.title"></span></div>
+    <div class="formats" id="formats"></div>
+    <div id="partnersBlock" hidden>
+      <span class="eyebrow eyebrow--spaced" data-ui="offer.partners"></span>
+      <div class="partners" id="partners"></div>
+    </div>
+  </section>
+
+  <section class="section wrap mode-fade" id="contact">
+    <div class="contact-card">
+      <span class="eyebrow" id="contactTitle"></span>
+      <h2 id="contactHeadline"></h2>
+      <p id="contactBody"></p>
+      <div class="mailrow" id="contactActions"></div>
+      <div class="copy-slot"><span class="copy-ok" id="copyOk" data-ui="contact.copied"></span></div>
+    </div>
+  </section>
+</main>
+
+<div class="wrap">
+  <footer>
+    <span id="footerLeft"></span>
+    <span id="footerRight"></span>
+  </footer>
+</div>
+
+<script src="config/theme.js"></script>
+<script src="config/platforms.js"></script>
+<script src="config/i18n.js"></script>
+<script src="config/profile.js"></script>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

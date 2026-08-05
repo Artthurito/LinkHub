@@ -1,13 +1,19 @@
 # Ícones das redes sociais
 
-Coloque aqui os PNGs, com estes nomes exatos (é o que `config/platforms.js`
-espera):
+Os PNGs já estão aqui, com os nomes que `config/platforms.js` espera:
 
 ```
 twitch.png     youtube.png    instagram.png   tiktok.png
 kick.png       x.png          discord.png     telegram.png
 whatsapp.png   spotify.png    email.png       store.png      link.png
 ```
+
+Os dez primeiros vêm do **Simple Icons** (simpleicons.org, licença CC0),
+exportados em branco a 128 px. Os três últimos — `email`, `store` e `link` —
+não são marcas, então são desenhos genéricos no mesmo estilo.
+
+Para adicionar uma rede nova: exporte o SVG do Simple Icons em branco a 128 px,
+salve como PNG aqui e registre a entrada em `config/platforms.js`.
 
 ## Especificação
 

@@ -1,26 +1,30 @@
 # Link Hub — página de perfil para criadores
 
 Template de página única para streamers e influenciadores. Reúne links, redes,
-estatísticas e contato comercial em um endereço só, com dois modos de leitura:
-um para o público e outro para marcas que estão avaliando um patrocínio.
+estatísticas e contato comercial em um endereço só — para o fã e para a marca
+que está avaliando um patrocínio.
 
 Cliente atual deste repositório: **Thimagroo**.
 
 ## O que ele resolve
 
-Uma página de links comum atende bem o fã e mal a marca. Aqui a mesma URL tem um
-alternador **Sou fã / Sou marca** no topo: no modo fã os links vêm primeiro; no
-modo marca sobem os dados de audiência, os formatos de parceria e o contato.
-Nenhuma URL extra para divulgar, nenhum PDF para caçar no e-mail.
+Uma página de links comum atende bem o fã e mal a marca. Aqui tudo vive na mesma
+rolagem, na ordem em que cada público desiste: primeiro a Twitch em destaque,
+depois as redes sociais, e só então os números de audiência, os formatos de
+parceria e o contato comercial. O fã encontra o que quer no topo; a marca
+continua descendo e acha o mídia kit. Nenhuma URL extra para divulgar, nenhum
+PDF para caçar no e-mail.
 
 Outras características:
 
 - Estático puro. Sem build, sem framework, sem dependência para instalar.
 - Bilíngue PT/EN, detectando o idioma do navegador.
-- Números da prova social animados, com formatação por idioma (300 mi / 300M).
+- Números da prova social animados ao entrar na tela, com formatação por idioma
+  (300 mi / 300M).
 - Sete paletas prontas, trocadas com uma linha.
 - Cada rede social liga e desliga com um booleano.
-- Responsivo, com foco visível no teclado e `prefers-reduced-motion` respeitado.
+- Responsivo de verdade: um só CSS atende celular e desktop, com foco visível no
+  teclado e `prefers-reduced-motion` respeitado.
 
 ## Estrutura
 
@@ -49,12 +53,16 @@ nem `style.css` precisam ser tocados.
 Abrir o `index.html` direto no navegador funciona — os scripts são clássicos, não
 módulos ES, justamente para não esbarrar em CORS no protocolo `file://`.
 
-Para um servidor local, com recarregamento mais previsível:
+Para um servidor local, com recarregamento mais previsível — qualquer uma das
+opções abaixo, conforme o que já estiver instalado:
 
 ```bash
-python3 -m http.server 8000
-# depois: http://localhost:8000
+npx serve .                  # Node
+python -m http.server 8000   # Python (no Windows o comando é "python", não "python3")
 ```
+
+Depois abra o endereço que o comando imprimir (`http://localhost:3000` no caso
+do `npx serve`, `http://localhost:8000` no do Python).
 
 ## Personalizando
 
@@ -69,6 +77,15 @@ theme: "vermelho",   // azul | vermelho | amarelo | verde | roxo | laranja | bra
 Para criar uma cor nova, adicione um bloco em `config/theme.js` com `accent`,
 `accentSoft`, `onAccent` e `glow`. Atenção ao `onAccent`: é a cor do texto sobre
 o botão principal, então precisa ter contraste com o `accent`.
+
+A linha de progresso do topo tem controle próprio, logo abaixo do `theme`:
+
+```js
+progressColor: "accent",   // "accent" | "bone" | qualquer cor CSS
+```
+
+`accent` deixa a linha na cor do tema, igual aos botões — é o padrão. `bone`
+volta ao monocromático, útil quando o tema já é muito saturado.
 
 ### Ligar e desligar redes
 
@@ -86,19 +103,20 @@ têm conteúdo (cortes, patrocinadores).
 
 ```js
 features: {
-  langSwitch: true,   // botão PT / EN
-  brandMode: true,    // alternador Sou fã / Sou marca
-  counters: true,     // números animados
-  liveStatus: true,   // selo de ao vivo
-  grain: true,        // textura de fundo
+  langSwitch: true,     // botão PT / EN
+  brandSection: true,   // seções de audiência e formatos de parceria
+  counters: true,       // números animados
+  liveStatus: true,     // selo de ao vivo
+  grain: true,          // textura de fundo
 }
 ```
 
 ### Ícones
 
-Os PNGs ficam em `assets/icons/`. Enquanto um arquivo não existir, o card mostra
-um monograma ("TW", "YT") no lugar — a página não quebra. Ver
-`assets/icons/README.md` para especificação e onde baixar os oficiais.
+Os PNGs já estão em `assets/icons/` — os das marcas vêm do Simple Icons (CC0),
+exportados em branco a 128 px. Se um arquivo faltar, o card cai para um
+monograma ("TW", "YT") e a página não quebra. Ver `assets/icons/README.md` para
+a especificação e como adicionar uma rede nova.
 
 ## Status "ao vivo" real
 
@@ -130,7 +148,7 @@ página for de um cliente pagante, ou se usa o Pages ou se assina o Vercel Pro.
 
 ## Pendências
 
-- [ ] Adicionar os PNGs oficiais em `assets/icons/`
+- [x] Adicionar os PNGs oficiais em `assets/icons/`
 - [ ] Confirmar os números marcados com `TODO` em `config/profile.js`
 - [ ] Gerar `assets/img/og.png` (1200×630) para o preview em links
 - [ ] Preencher os dados reais de audiência do modo marca

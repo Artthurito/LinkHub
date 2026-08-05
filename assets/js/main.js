@@ -39,6 +39,10 @@
     root.setProperty("--mist", base.mist);
     root.setProperty("--live", base.live);
 
+    const choice = P.progressColor || "accent";
+    const progress = choice === "accent" ? theme.accent : choice === "bone" ? base.bone : choice;
+    root.setProperty("--progress", progress);
+
     const meta = document.querySelector('meta[name="theme-color"]');
     if (meta) meta.setAttribute("content", base.ink);
 
@@ -57,59 +61,52 @@
     lang = available.includes(guess) ? guess : available[0];
   }
 
-  function buildSwitches() {
-    const langBox = $("langSwitch");
-    if (F.langSwitch && (P.languages || []).length > 1) {
-      langBox.hidden = false;
-      langBox.setAttribute("aria-label", "Idioma / Language");
-      P.languages.forEach((code) => {
-        const b = el("button");
-        b.type = "button";
-        b.textContent = code.toUpperCase();
-        b.addEventListener("click", () => {
-          lang = code;
-          render();
-        });
-        b.dataset.lang = code;
-        langBox.appendChild(b);
+  function buildLangSwitch() {
+    const box = $("langSwitch");
+    if (!F.langSwitch || (P.languages || []).length < 2) return;
+    box.hidden = false;
+    box.setAttribute("aria-label", "Idioma / Language");
+    P.languages.forEach((code) => {
+      const b = el("button");
+      b.type = "button";
+      b.textContent = code.toUpperCase();
+      b.dataset.lang = code;
+      b.addEventListener("click", () => {
+        lang = code;
+        render();
       });
-    }
-
-    const modeBox = $("modeSwitch");
-    if (F.brandMode) {
-      modeBox.hidden = false;
-      modeBox.setAttribute("aria-label", "Visualização / View");
-      ["fan", "brand"].forEach((m) => {
-        const b = el("button");
-        b.type = "button";
-        b.dataset.mode = m;
-        b.addEventListener("click", () => setMode(m));
-        modeBox.appendChild(b);
-      });
-    }
+      box.appendChild(b);
+    });
   }
 
-  function setMode(mode) {
-    const html = document.documentElement;
-    if (html.dataset.mode === mode) return;
-    document.body.classList.add("switching");
-    window.setTimeout(() => {
-      html.dataset.mode = mode;
-      syncSwitchStates();
-      document.body.classList.remove("switching");
-      observeAll();
-      animateBars();
-    }, 200);
-  }
-
-  function syncSwitchStates() {
+  function syncLangState() {
     document.querySelectorAll("#langSwitch button").forEach((b) => {
       b.setAttribute("aria-pressed", String(b.dataset.lang === lang));
     });
-    document.querySelectorAll("#modeSwitch button").forEach((b) => {
-      b.setAttribute("aria-pressed", String(b.dataset.mode === document.documentElement.dataset.mode));
-      b.textContent = ui("mode." + b.dataset.mode);
-    });
+  }
+
+  /* linha de progresso do topo */
+  function bindProgress() {
+    const bar = $("progress");
+    if (!bar) return;
+    let ticking = false;
+    const update = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const pct = max > 0 ? (window.scrollY / max) * 100 : 0;
+      bar.style.width = Math.min(pct, 100) + "%";
+      ticking = false;
+    };
+    window.addEventListener(
+      "scroll",
+      () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(update);
+      },
+      { passive: true }
+    );
+    window.addEventListener("resize", update, { passive: true });
+    update();
   }
 
   function buildIcon(platformKey) {
@@ -147,7 +144,7 @@
       title.textContent = t(group.title);
       wrap.appendChild(title);
 
-      const list = el("div", "links" + (group.layout === "split" ? " links--split" : ""));
+      const list = el("div", "links");
 
       visible.forEach((link) => {
         const meta = window.PLATFORMS[link.platform] || window.PLATFORMS.link;
@@ -187,17 +184,24 @@
 
   /* prova social */
   const counterState = new WeakMap();
+  const STATS_LOCALE = "en-US";
 
   function formatNumber(value, mode) {
     if (mode === "compact") {
-      return new Intl.NumberFormat(locale(), { notation: "compact", maximumFractionDigits: 1 }).format(value);
+      return new Intl.NumberFormat(STATS_LOCALE, { notation: "compact", maximumFractionDigits: 1 }).format(value);
     }
-    return new Intl.NumberFormat(locale()).format(Math.round(value));
+    return new Intl.NumberFormat(STATS_LOCALE).format(Math.round(value));
+  }
+
+  function paintValue(node, value) {
+    const rounded = Math.round(value);
+    const suffix = rounded > 0 ? node.dataset.suffix || "" : "";
+    node.textContent = formatNumber(rounded, node.dataset.fmt) + suffix;
   }
 
   function buildStats() {
     if (!F.counters || !(P.stats || []).length) return;
-    $("proof").hidden = false;
+    $("numbers").hidden = false;
     $("statsPeriod").textContent = t(P.statsPeriod);
     $("statsSource").textContent = t(P.statsSource);
 
@@ -208,8 +212,9 @@
       const num = el("span", "stat-num");
       num.dataset.count = String(stat.value);
       num.dataset.fmt = stat.fmt || "compact";
+      num.dataset.suffix = stat.suffix || "";
       const done = counterState.get(stat) || 0;
-      num.textContent = formatNumber(stat.value * done, num.dataset.fmt);
+      paintValue(num, stat.value * done);
       num.__stat = stat;
       const label = el("span", "stat-label");
       label.textContent = t(stat.label);
@@ -222,73 +227,31 @@
   function runCounter(node) {
     const stat = node.__stat;
     if (counterState.get(stat) === 1) {
-      node.textContent = formatNumber(stat.value, node.dataset.fmt);
+      paintValue(node, stat.value);
       return;
     }
     const target = Number(node.dataset.count);
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) {
       counterState.set(stat, 1);
-      node.textContent = formatNumber(target, node.dataset.fmt);
+      paintValue(node, target);
       return;
     }
-    const duration = 1600;
+    const duration = 2200;
     const start = performance.now();
     function step(now) {
       const p = Math.min((now - start) / duration, 1);
-      const eased = 1 - Math.pow(1 - p, 4);
+      const eased = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
       counterState.set(stat, eased);
-      node.textContent = formatNumber(target * eased, node.dataset.fmt);
+      paintValue(node, target * eased);
       if (p < 1) requestAnimationFrame(step);
     }
     requestAnimationFrame(step);
   }
 
-  function buildBrand() {
-    if (!F.brandMode || !P.brand) return;
-    $("audience").hidden = false;
+  function buildOffer() {
+    if (!F.brandSection || !P.brand) return;
     $("offer").hidden = false;
-
-    const bars = (host, rows) => {
-      host.innerHTML = "";
-      (rows || []).forEach((row) => {
-        const line = el("div", "bar-row");
-        const meta = el("div", "bar-meta");
-        const name = el("span");
-        name.textContent = t(row.label);
-        const val = el("b");
-        val.textContent = row.value + "%";
-        meta.appendChild(name);
-        meta.appendChild(val);
-        const bar = el("div", "bar");
-        const fill = el("i");
-        fill.dataset.bar = String(row.value);
-        bar.appendChild(fill);
-        line.appendChild(meta);
-        line.appendChild(bar);
-        host.appendChild(line);
-      });
-    };
-
-    bars($("barsAge"), P.brand.audience && P.brand.audience.age);
-    bars($("barsRegion"), P.brand.audience && P.brand.audience.region);
-
-    const kv = (host, rows) => {
-      host.innerHTML = "";
-      (rows || []).forEach((row) => {
-        const line = el("div", "kv");
-        const name = el("span");
-        name.textContent = t(row.label);
-        const val = el("b");
-        val.textContent = row.value;
-        line.appendChild(name);
-        line.appendChild(val);
-        host.appendChild(line);
-      });
-    };
-
-    kv($("kvPlatforms"), P.brand.platforms);
-    kv($("kvEngagement"), P.brand.engagement);
 
     const formats = $("formats");
     formats.innerHTML = "";
@@ -366,16 +329,12 @@
     }
   }
 
-  function buildHeader() {
-    const mark = $("brandmark");
-    mark.innerHTML = "";
-    mark.appendChild(document.createTextNode("@" + P.handle));
-
+  function buildHero() {
     const avatar = $("avatar");
     avatar.src = P.avatar;
     avatar.alt = P.displayName;
 
-    $("displayName").innerHTML = P.displayNameBreak || P.displayName;
+    $("displayName").textContent = P.displayName;
     $("tagline").textContent = t(P.tagline);
 
     if (F.liveStatus) {
@@ -393,22 +352,11 @@
       a.textContent = t(P.hero.primaryCta);
       cta.appendChild(a);
     }
-    if (F.brandMode) {
-      const b = el("button", "btn btn--ghost");
-      b.type = "button";
-      b.textContent = ui("hero.mediakit");
-      b.addEventListener("click", () => {
-        setMode("brand");
-        window.setTimeout(
-          () => $("audience").scrollIntoView({ behavior: "smooth", block: "start" }),
-          260
-        );
-      });
-      cta.appendChild(b);
-    }
+  }
 
-    $("footerLeft").textContent = "© " + new Date().getFullYear() + " " + P.displayName;
-    $("footerRight").textContent = t(P.footer);
+  function buildFooter() {
+    const year = new Date().getFullYear();
+    $("footerText").textContent = "© " + year + " " + P.legalName + " " + ui("footer.rights");
   }
 
   /* animações */
@@ -425,7 +373,7 @@
   );
 
   function observeAll() {
-    document.querySelectorAll(".section, .proof, .panel, .format").forEach((node) => {
+    document.querySelectorAll(".section, .format").forEach((node) => {
       if (!node.classList.contains("in")) {
         node.classList.add("reveal");
         io.observe(node);
@@ -434,12 +382,30 @@
     document.querySelectorAll(".stat-num").forEach((node) => io.observe(node));
   }
 
-  function animateBars() {
-    requestAnimationFrame(() => {
-      document.querySelectorAll("[data-bar]").forEach((node) => {
-        node.style.width = node.dataset.bar + "%";
-      });
-    });
+  function bindSpotlight() {
+    const SELECTOR = ".link, .format, .proof, .contact-card";
+    let pending = null;
+    let frame = 0;
+
+    const flush = () => {
+      frame = 0;
+      if (!pending) return;
+      const { card, x, y } = pending;
+      const box = card.getBoundingClientRect();
+      card.style.setProperty("--mx", (x - box.left) + "px");
+      card.style.setProperty("--my", (y - box.top) + "px");
+    };
+
+    document.addEventListener(
+      "pointermove",
+      (e) => {
+        const card = e.target instanceof Element && e.target.closest(SELECTOR);
+        if (!card) return;
+        pending = { card, x: e.clientX, y: e.clientY };
+        if (!frame) frame = requestAnimationFrame(flush);
+      },
+      { passive: true }
+    );
   }
 
   function render() {
@@ -447,18 +413,20 @@
     document.querySelectorAll("[data-ui]").forEach((node) => {
       node.textContent = ui(node.dataset.ui);
     });
-    buildHeader();
+    buildHero();
     buildStats();
     buildLinks();
-    buildBrand();
+    buildOffer();
     buildContact();
-    syncSwitchStates();
+    buildFooter();
+    syncLangState();
     observeAll();
-    animateBars();
   }
 
   applyTheme();
   resolveLanguage();
-  buildSwitches();
+  buildLangSwitch();
+  bindProgress();
+  bindSpotlight();
   render();
 })();

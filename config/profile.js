@@ -3,13 +3,15 @@ window.PROFILE = {
   /* identidade */
   handle: "thimagroo",
   displayName: "Thimagroo",
-  displayNameBreak: "Thima<br>groo",
+  legalName: "Thiago Bertoncello",
   avatar: "assets/img/avatar.jpg",
   theme: "vermelho",
 
+  progressColor: "accent",
+
   features: {
     langSwitch: true,     // botão PT / EN
-    brandMode: true,      // alternador "Sou fã" / "Sou marca"
+    brandSection: true,   // seções de audiência e formatos de parceria
     counters: true,       // números animados da prova social
     liveStatus: true,     // selo de ao vivo no topo
     grain: true,          // textura de grão no fundo
@@ -42,19 +44,19 @@ window.PROFILE = {
     pt: "Dados de Twitch, YouTube, TikTok e Instagram · atualizado em ago/2026",
     en: "Twitch, YouTube, TikTok and Instagram data · updated Aug 2026",
   },
+
   stats: [
-    { value: 300000000, fmt: "compact", label: { pt: "Visualizações", en: "Views" } },
-    { value: 300000,    fmt: "compact", label: { pt: "Seguidores na Twitch", en: "Twitch followers" } },
-    { value: 1200000,   fmt: "compact", label: { pt: "Audiência somada", en: "Combined audience" } },      // TODO confirmar
-    { value: 9500,      fmt: "compact", label: { pt: "Média de espectadores", en: "Average viewers" } },   // TODO confirmar
+    { value: 300000000, fmt: "compact", suffix: "+", label: { pt: "Visualizações", en: "Views" } },
+    { value: 300000,    fmt: "compact", suffix: "+", label: { pt: "Seguidores na Twitch", en: "Twitch followers" } },
+    { value: 1200000,   fmt: "compact", suffix: "+", label: { pt: "Audiência somada", en: "Combined audience" } },      // TODO confirmar
+    { value: 2000,      fmt: "compact", suffix: "",  label: { pt: "Média de espectadores", en: "Average viewers" } },   // TODO confirmar
   ],
 
   /* links */
   groups: [
     {
       id: "principal",
-      title: { pt: "Principal", en: "Main" },
-      layout: "full",
+      title: { pt: "Ao vivo", en: "Live" },
       links: [
         {
           enabled: true,
@@ -63,12 +65,6 @@ window.PROFILE = {
           featured: true,                 // card em destaque com a cor do tema
           livePill: true,                 // ganha o selo "AO VIVO" quando isLive = true
           subtitle: { pt: "Lives de IRL, quase todo dia", en: "IRL streams, almost daily" },
-        },
-        {
-          enabled: true,
-          platform: "youtube",
-          url: "https://www.youtube.com/@thimagroo",
-          subtitle: { pt: "Vídeos e melhores momentos", en: "Videos and highlights" },
         },
         {
           enabled: false,                 // exemplo: desligado, não aparece no site
@@ -81,8 +77,13 @@ window.PROFILE = {
     {
       id: "redes",
       title: { pt: "Redes", en: "Social" },
-      layout: "split",
       links: [
+        {
+          enabled: true,
+          platform: "youtube",
+          url: "https://www.youtube.com/@thimagroo",
+          subtitle: { pt: "Vídeos e melhores momentos", en: "Videos and highlights" },
+        },
         { enabled: true, platform: "instagram", url: "https://www.instagram.com/thimagroo/", subtitle: "@thimagroo" },
         { enabled: true, platform: "tiktok",    url: "https://www.tiktok.com/@thimagroo",    subtitle: "@thimagroo" },
         { enabled: true, platform: "discord",   url: "https://discord.gg/thimagroo",
@@ -93,7 +94,6 @@ window.PROFILE = {
     {
       id: "cortes",
       title: { pt: "Cortes & clipes", en: "Clips" },
-      layout: "split",
       enabled: false,        // grupo inteiro desligado — ligue quando tiver as páginas
       links: [
         { enabled: true, platform: "tiktok",    url: "", subtitle: { pt: "Página de cortes", en: "Clips account" } },
@@ -103,7 +103,6 @@ window.PROFILE = {
     {
       id: "parceiros",
       title: { pt: "Parceiros & cupons", en: "Partners & codes" },
-      layout: "split",
       enabled: false,        // ligue quando houver patrocinador ativo
       links: [
         { enabled: true, platform: "link", label: "Marca exemplo", url: "",
@@ -114,31 +113,6 @@ window.PROFILE = {
 
   /* marca */
   brand: {
-    audience: {
-      age: [
-        { label: "13–17", value: 14 },
-        { label: "18–24", value: 45 },
-        { label: "25–34", value: 31 },
-        { label: "35+",   value: 10 },
-      ],
-      region: [
-        { label: { pt: "Sudeste", en: "Southeast" },            value: 44 },
-        { label: { pt: "Nordeste", en: "Northeast" },           value: 22 },
-        { label: { pt: "Sul", en: "South" },                    value: 17 },
-        { label: { pt: "Norte / Centro-Oeste", en: "North / Midwest" }, value: 17 },
-      ],
-    },
-    platforms: [
-      { label: "Twitch",    value: "300 mil" },
-      { label: "YouTube",   value: "—" },      // TODO
-      { label: "TikTok",    value: "—" },      // TODO
-      { label: "Instagram", value: "—" },      // TODO
-    ],
-    engagement: [
-      { label: { pt: "Visualizações em 6 meses", en: "Views in 6 months" }, value: "300 mi+" },
-      { label: { pt: "Tempo médio de sessão", en: "Average session length" }, value: "—" },
-      { label: { pt: "CTR médio em links", en: "Average link CTR" }, value: "—" },
-    ],
     formats: [
       { title: { pt: "Ação ao vivo", en: "Live integration" },
         text:  { pt: "Menção roteirizada, presença de marca no IRL ou desafio com a comunidade durante a transmissão.",
@@ -167,10 +141,5 @@ window.PROFILE = {
     telegram: { enabled: true, handle: "@Thimagrocontact", url: "https://t.me/Thimagrocontact" },
     email:    { enabled: false, address: "" },
     mediaKitPdf: { enabled: false, url: "" },
-  },
-
-  footer: {
-    pt: "Todos os links do Thimagroo em um lugar só.",
-    en: "Every Thimagroo link in one place.",
   },
 };

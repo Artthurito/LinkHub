@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-mode="fan">
+<html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -22,64 +22,43 @@
 
 <body>
 
-<header class="topbar">
-  <div class="wrap topbar-inner">
-    <div class="brandmark" id="brandmark"></div>
-    <div class="seg seg--mode" id="modeSwitch" role="group" hidden></div>
-    <div class="seg seg--lang" id="langSwitch" role="group" hidden></div>
-  </div>
-</header>
+<div class="topline" aria-hidden="true"><i id="progress"></i></div>
 
 <div class="wrap">
   <section class="hero">
-    <div class="hero-id">
-      <div class="avatar-row">
-        <div class="avatar"><img id="avatar" alt="" width="76" height="76"></div>
-        <div class="status" id="status" hidden>
-          <span class="dot"></span><span id="statusText"></span>
-        </div>
-      </div>
-      <h1 id="displayName"></h1>
-      <p class="tagline" id="tagline"></p>
-      <div class="cta-row" id="ctaRow"></div>
+    <div class="avatar"><img id="avatar" alt="" width="96" height="96"></div>
+
+    <div class="status" id="status" hidden>
+      <span class="dot"></span><span id="statusText"></span>
     </div>
 
-    <aside class="proof" id="proof" hidden>
-      <div class="proof-head">
-        <span class="eyebrow" data-ui="proof.title"></span>
-        <span class="eyebrow" id="statsPeriod"></span>
-      </div>
-      <div class="proof-grid" id="statsGrid"></div>
-      <p class="proof-foot" id="statsSource"></p>
-    </aside>
+    <h1 id="displayName"></h1>
+    <p class="tagline" id="tagline"></p>
+
+    <div class="seg seg--lang" id="langSwitch" role="group" hidden></div>
+
+    <div class="cta-row" id="ctaRow"></div>
   </section>
 </div>
 
 <main>
-  <section class="section wrap mode-fade" id="links">
+  <section class="section wrap" id="links">
     <div class="section-head"><span class="eyebrow" data-ui="links.title"></span></div>
     <div id="linkGroups"></div>
   </section>
 
-  <section class="section wrap mode-fade brand-only" id="audience" hidden>
-    <div class="section-head"><span class="eyebrow" data-ui="aud.title"></span></div>
-    <div class="panel-grid panel-grid--2">
-      <div class="panel">
-        <span class="eyebrow" data-ui="aud.age"></span>
-        <div class="bars" id="barsAge"></div>
-        <span class="eyebrow eyebrow--spaced" data-ui="aud.region"></span>
-        <div class="bars" id="barsRegion"></div>
+  <section class="section wrap" id="numbers" hidden>
+    <div class="section-head"><span class="eyebrow" data-ui="proof.title"></span></div>
+    <div class="proof">
+      <div class="proof-head">
+        <span class="eyebrow" id="statsPeriod"></span>
       </div>
-      <div class="panel">
-        <span class="eyebrow" data-ui="aud.platforms"></span>
-        <div class="kv-list" id="kvPlatforms"></div>
-        <span class="eyebrow eyebrow--spaced" data-ui="aud.engage"></span>
-        <div class="kv-list" id="kvEngagement"></div>
-      </div>
+      <div class="proof-grid" id="statsGrid"></div>
+      <p class="proof-foot" id="statsSource"></p>
     </div>
   </section>
 
-  <section class="section wrap mode-fade brand-only" id="offer" hidden>
+  <section class="section wrap" id="offer" hidden>
     <div class="section-head"><span class="eyebrow" data-ui="offer.title"></span></div>
     <div class="formats" id="formats"></div>
     <div id="partnersBlock" hidden>
@@ -88,7 +67,7 @@
     </div>
   </section>
 
-  <section class="section wrap mode-fade" id="contact">
+  <section class="section wrap" id="contact">
     <div class="contact-card">
       <span class="eyebrow" id="contactTitle"></span>
       <h2 id="contactHeadline"></h2>
@@ -100,10 +79,7 @@
 </main>
 
 <div class="wrap">
-  <footer>
-    <span id="footerLeft"></span>
-    <span id="footerRight"></span>
-  </footer>
+  <footer><span id="footerText"></span></footer>
 </div>
 
 <script src="config/theme.js"></script>

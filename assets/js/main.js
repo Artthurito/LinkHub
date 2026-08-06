@@ -238,7 +238,7 @@
       paintValue(node, target);
       return;
     }
-    const duration = P.counterDuration || 6000;
+    const duration = P.counterDuration || 3000;
     const start = performance.now();
     let painted = -1;
     function step(now) {

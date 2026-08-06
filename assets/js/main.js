@@ -365,6 +365,38 @@
     $("footerText").textContent = "© " + year + " " + P.legalName + " " + ui("footer.rights");
   }
 
+  function applyLive(isLive) {
+    if (P.live.isLive === isLive) return;
+    P.live.isLive = isLive;
+    document.body.dataset.live = String(F.liveStatus && isLive);
+    if (F.liveStatus) {
+      $("statusText").textContent = isLive ? t(P.live.onText) : t(P.live.offText);
+    }
+    buildLinks();
+    observeAll();
+  }
+
+  function watchLive() {
+    const url = P.live && P.live.endpoint;
+    if (!url || !F.liveStatus) return;
+
+    const poll = () =>
+      window
+        .fetch(url, { cache: "no-store" })
+        .then((r) => (r.ok ? r.json() : null))
+        .then((d) => {
+          if (d && typeof d.isLive === "boolean") applyLive(d.isLive);
+        })
+        .catch(() => {});
+
+    poll();
+    const seconds = Math.max(P.live.pollSeconds || 60, 30);
+    window.setInterval(poll, seconds * 1000);
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) poll();
+    });
+  }
+
   function buildStructuredData() {
     const canonical = document.querySelector('link[rel="canonical"]');
     const base = canonical ? canonical.href : window.location.href;
@@ -483,4 +515,5 @@
   bindProgress();
   bindSpotlight();
   render();
+  watchLive();
 })();

@@ -24,6 +24,8 @@ window.PROFILE = {
   /* status live */
   live: {
     isLive: false,
+    endpoint: "/api/live",
+    pollSeconds: 60,
     watchUrl: "https://www.twitch.tv/thimagroo",
     onText:  { pt: "Ao vivo agora na Twitch", en: "Live now on Twitch" },
     offText: { pt: "Offline · lives quase todo dia", en: "Offline · streams almost daily" },

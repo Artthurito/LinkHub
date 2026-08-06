@@ -184,6 +184,7 @@
 
   /* prova social */
   const counterState = new WeakMap();
+  const COUNTER_STEPS = 100;
   const STATS_LOCALE = "en-US";
 
   function formatNumber(value, mode) {
@@ -239,11 +240,16 @@
     }
     const duration = P.counterDuration || 6000;
     const start = performance.now();
+    let painted = -1;
     function step(now) {
       const p = Math.min((now - start) / duration, 1);
-      const eased = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
-      counterState.set(stat, eased);
-      paintValue(node, target * eased);
+      const index = Math.min(Math.round(p * COUNTER_STEPS), COUNTER_STEPS);
+      if (index !== painted) {
+        painted = index;
+        const done = index / COUNTER_STEPS;
+        counterState.set(stat, done);
+        paintValue(node, target * done);
+      }
       if (p < 1) requestAnimationFrame(step);
     }
     requestAnimationFrame(step);
